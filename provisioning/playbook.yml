@@ -1,0 +1,51 @@
+---
+- hosts: all
+  sudo: yes
+  sudo_user: root
+  vars: 
+    oracle_packages:
+      - oracle-java8-installer
+      - oracle-java8-set-default
+    oracle_installer_key: oracle-java8-installer
+    oracle_license_key: accepted-oracle-license-v1-1
+    scala_version: "2.11.6"
+    scala_version_name: "scala-{{scala_version}}"
+    scala_archive_file: "{{scala_version_name}}.tgz"
+    scala_download_url: "http://www.scala-lang.org/files/archive/{{scala_archive_file}}"
+    scala_lib_path: "/usr/share/scala"
+    scala_lib_path_target: "{{scala_lib_path}}/{{scala_version_name}}"
+    scala_link_target: "/usr/bin"
+    docker_apt_key_sig: A88D21E9
+    docker_apt_key_url: http://get.docker.io/gpg
+    docker_apt_repository: deb https://get.docker.com/ubuntu docker main
+    docker_pkg_name: lxc-docker
+    docker_opts: ""
+    # Versions for the python packages that are installed installed
+    pip_version_pip: latest
+    pip_version_setuptools: latest
+    pip_version_docker_py: latest
+  tasks: 
+    - name: Docker | Add repository key
+      apt_key:
+        id: "{{ docker_apt_key_sig }}"
+        url: "{{ docker_apt_key_url }}"
+        state: present
+
+    - name: Docker | Add repository
+      apt_repository:
+        repo: "{{ docker_apt_repository }}"
+        state: present
+
+    - name: SYSTEM | Update apt cache
+      apt: update_cache=yes
+
+    - name: Git | Ensure git is at the latest version
+      apt: pkg=git state=latest
+
+    - name: Unzip | Ensure Unzip is installed and latest version
+      apt: pkg=unzip state=latest
+
+    - name: Docker | Install docker package
+      apt:
+        name: "{{ docker_pkg_name }}"
+        state: latest
