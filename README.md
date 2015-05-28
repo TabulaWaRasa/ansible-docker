@@ -1,8 +1,7 @@
-#Basic Scala Vagrant Box setup with Ansible Playbook
+#Basic Docker Vagrant Box setup with Ansible Playbook
 
 ##Includes
-  - Oracle Java 8
-  - Scala
+  - Docker
 
 ##Requirements
 - VirtualBox https://www.virtualbox.org/wiki/Downloads 
